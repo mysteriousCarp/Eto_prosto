@@ -13,7 +13,8 @@ function callBlockly(method, ...args) {
 async function readBlock(path)
 {
     block = await block_lib.Block.open(path)
-    callBlockly('trigger-read-block',block.config.name, block.getConfig())
+    callBlockly('addBlock',block.config.name, block.getConfig())
+    callBlockly('addBlockToCategory', 'Уязвимости', block.config.name)
 }
 async function createWindow() {
     win = new BrowserWindow({
@@ -47,6 +48,7 @@ async function createWindow() {
     }))
     Menu.setApplicationMenu(menu)
     win.loadFile(path.join(__dirname, '../dist/index.html'));
+    win.webContents.openDevTools()
 
 
 

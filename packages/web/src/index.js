@@ -451,6 +451,20 @@ function init()
     // addBlock('Уязвимость прав доступа', testcongig)
     // categoryAddBlock('Уязвимости','Уязвимость открытых портов')
     // categoryAddBlock('Уязвимости','Уязвимость прав доступа')
+    window.addEventListener('blockly-rpc', (event) => {
+        const { method, args } = event.detail;
+
+        // Ищем функцию в вашем объекте
+        const fn = window.blocklyUtils?.[method];
+
+        console.log('Web: получен вызов', method, args, 'Найдено:', !!fn);
+
+        if (typeof fn === 'function') {
+            fn(...args);
+        } else {
+            console.error(`Метод ${method} не найден в blocklyUtils`);
+        }
+    });
 }
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
