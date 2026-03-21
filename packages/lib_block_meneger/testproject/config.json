@@ -1,1 +1,1 @@
-{"name":"test_block","version":"1.x", "code": "function test_block (config={'par1': 123, 'par2': 112}){require('alert')('код исполнился'); return {result:1, text: ''}}"}
+{"name":"test_block","version":"1.x","type": "block", }

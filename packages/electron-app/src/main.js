@@ -7,14 +7,17 @@ const fs = require('fs');
 const block_lib = require('lib_block_meneger')
 
 let win;
+let blocks = []
 function callBlockly(method, ...args) {
     win.webContents.send('call-blockly', method, ...args);
 }
 async function readBlock(path)
 {
-    block = await block_lib.Block.open(path)
-    callBlockly('addBlock',block.config.name, block.getConfig())
+    const block = await block_lib.Block.open(path)
+    console.log(block.config.name, block.getConfig())
+    callBlockly('addVulnBlock',block.config.name, block.getConfig())
     callBlockly('addBlockToCategory', 'Уязвимости', block.config.name)
+    blocks.push(block)
 }
 async function createWindow() {
     win = new BrowserWindow({
@@ -34,7 +37,7 @@ async function createWindow() {
                     title: 'Выберите файл .etb',
                     buttonLabel: 'Открыть',
                     filters: [
-                        { name: 'Eto Prosto Blcoks Files', extensions: ['etb'] },
+                        { name: 'Eto Prosto Blcoks Files', extensions: ['etb', 'epkg'] },
                     ],
                     properties: ['openFile']
                 });
@@ -68,6 +71,13 @@ app.on('window-all-closed', () => {
 });
 ipcMain.handle('run-script', (event, code) => {
     const tempFile = `./temp_script${crypto.randomUUID().slice(0, 8)}.js`;
+    console.log(code)
+    for (const i of blocks)
+    {
+        code = i.getCode() + '\n' + code + '\n'
+        console.log(code)
+    }
+
     fs.writeFileSync(tempFile, code);
 
     return new Promise((resolve) => {
@@ -78,6 +88,7 @@ ipcMain.handle('run-script', (event, code) => {
         });
         child.on('error', (err) => {
             resolve({ error: err.message });
+            child.kill();
         });
     });
 });
