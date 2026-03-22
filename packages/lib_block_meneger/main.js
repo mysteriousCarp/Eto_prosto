@@ -18,6 +18,7 @@ class Project {
 
         this.pathproject = path.join(basepath, this.config.name + crypto.randomUUID().replaceAll('-', '').slice(0, 10));
         log(`create project ${this.config.name} into ${this.pathproject}`);
+        this.fileprefix = 'epkg'
     }
 
     async init() {
@@ -32,7 +33,7 @@ class Project {
 
     async save(pathend, del = false, name = this.config.name) {
         return new Promise(async (resolve) => {
-            let stream = fs.createWriteStream(path.join(pathend, name + '.epkg'));
+            let stream = fs.createWriteStream(path.join(pathend, name + `.${this.fileprefix}`));
             let archive = archiver('zip', {
                 zlib: {level: 6}
             });

@@ -12,6 +12,7 @@ class block extends Project
     constructor(config = {name: 'project', version: 1, code: ''}, basepath = os.tmpdir()) {
         super(config, basepath);
         this.code = config.code
+        this.fileprefix = 'etb'
     }
     getConfig() {
         const code = this.config.code;

@@ -8,7 +8,7 @@ const block_lib = require('lib_block_meneger')
 
 let win;
 let blocks = []
-let workspace = block_lib.Workspace
+let workspace = new block_lib.Workspace()
 function callBlockly(method, ...args) {
     win.webContents.send('call-blockly', method, ...args);
 }
