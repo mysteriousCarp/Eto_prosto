@@ -46,4 +46,4 @@ class Workspace extends Project {
 
     }
 }
-this.module.exports = Workspace;
+module.exports = Workspace;

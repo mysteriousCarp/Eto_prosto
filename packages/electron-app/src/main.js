@@ -12,6 +12,23 @@ let workspace = new block_lib.Workspace()
 function callBlockly(method, ...args) {
     win.webContents.send('call-blockly', method, ...args);
 }
+async function save()
+{
+    const { canceled, filePath } = await dialog.showSaveDialog({
+        title: 'Сохранить конфигурацию',
+        defaultPath: 'my-file.txt', // Имя по умолчанию
+        filters: [{ name: 'Это просто файл рабочего пространства', extensions: ['epkg'] }]
+    });
+
+    if (!canceled && filePath) {
+        // Если пользователь не отменил, возвращаем путь
+        workspace.set_web_config()
+    }
+}
+async function load()
+{
+
+}
 async function readBlock(path)
 {
     const block = await block_lib.Block.open(path)
@@ -51,6 +68,17 @@ async function createWindow() {
             }
 
     }))
+    // menu.append(new MenuItem({
+    //     label: 'Файл',
+    //     submenu: [
+    //         new MenuItem({
+    //             label: 'Сохранить как...',
+    //             click: async () => {
+    //                await save()
+    //             }
+    //         })
+    //     ]
+    // }));
     Menu.setApplicationMenu(menu)
     win.loadFile(path.join(__dirname, '../dist/index.html'));
     win.webContents.openDevTools()
@@ -60,11 +88,12 @@ async function createWindow() {
 
 }
 
-app.whenReady().then(() => {
-    createWindow();
+app.whenReady().then( async () => {
+    await createWindow();
+    await workspace.init()
 
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    app.on('activate', async () => {
+        if (BrowserWindow.getAllWindows().length === 0) await createWindow();
     });
 });
 
