@@ -8,6 +8,7 @@ const block_lib = require('lib_block_meneger')
 
 let win;
 let blocks = []
+let workspace = block_lib.Workspace
 function callBlockly(method, ...args) {
     win.webContents.send('call-blockly', method, ...args);
 }
@@ -19,6 +20,7 @@ async function readBlock(path)
     callBlockly('addBlockToCategory', 'Уязвимости', block.config.name)
     blocks.push(block)
 }
+
 async function createWindow() {
     win = new BrowserWindow({
         width: 800,
